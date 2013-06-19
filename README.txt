@@ -40,9 +40,9 @@ This software doesn't require any installation. Just drop the files into a folde
 
 4. USAGE
 
-- Please put the dataset in the folder 'Data'. The data format is '<Dimension+1> X <# of data>'. The last line is the label of the data.
+- Please put the dataset in the folder 'Data'. The data format is '<Dimension+1> X <# of data>'. The last row is the label of the data.
 
-- To run the software, run the file 'Demo.m' in which many parameters could be set. Please refer to the paper how to setup these paramters  
+- To run the software, run the file 'Demo.m' in which many parameters could be set. Please refer to the paper how to setup these paramters.  
 
-- If you want to save the testing result label, please go to '\Functions\R2LML'. Uncomment line 81. The label will saved automatically.
+- If you want to save the testing result label, please go to '\Functions\R2LML'. Uncomment line 81. The label will be saved automatically.
 
