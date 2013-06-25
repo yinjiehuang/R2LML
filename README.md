@@ -9,9 +9,7 @@
  2013
 
 
-=========
 CONTENTS:
-=========
 
 1. General Information
 2. Requirements
