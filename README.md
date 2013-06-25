@@ -1,6 +1,6 @@
- =========
+=========
  Reduced-Rank Local Distance Metric Learning
- =========
+=========
  
  Yinjie Huang
  
