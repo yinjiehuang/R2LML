@@ -1,9 +1,9 @@
-=============================================
+
  Reduced-Rank Local Distance Metric Learning
  Yinjie Huang
  University of Central Florida
  2013
-=============================================
+
 
 
 
