@@ -12,14 +12,14 @@
 CONTENTS:
 =========
 
-1. General Information
-2. Requirements
-3. Installation
-4. Usage
+1.General Information
+2.Requirements
+3.Installation
+4.Usage
 
 =============================================
 
-1. GENERAL INFORMATION
+1.GENERAL INFORMATION
 
 This software was written to implement the algorithm "Reduced-Rank Local Distace Metric Learning". All rights belong to the author.
 
