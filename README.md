@@ -12,10 +12,10 @@
 CONTENTS:
 =========
 
-1.General Information
-2.Requirements
-3.Installation
-4.Usage
+1. General Information
+2. Requirements
+3. Installation
+4. Usage
 
 =============================================
 
