@@ -25,20 +25,20 @@ This software was written to implement the algorithm "Reduced-Rank Local Distace
 
 
 
-2. REQUIREMENTS
+2.REQUIREMENTS
 
 To run this software, you need to have the following components installed:
 - Mathworks MATLAB
 
 
 
-3. INSTALLATION
+3.INSTALLATION
 
 This software doesn't require any installation. Just drop the files into a folder.
 
 
 
-4. USAGE
+4.USAGE
 
 - Please put the dataset in the folder 'Data'. The data format is '<Dimension+1> X <# of data>'. The last row is the label of the data.
 
