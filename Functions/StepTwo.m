@@ -30,7 +30,7 @@ for k = 1:K
 end
 
 %Let's construct the majorization function and do the binary search for g
-mu = -max(eig(S_Til))-1;
+mu = -max(eig(S_Til));
 H = S_Til+mu*eye(K*N);
 B = kron(ones(1,k),eye(N));
 gprime = g;
