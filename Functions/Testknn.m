@@ -19,49 +19,38 @@ testlabel = testdata(TempD,:);
 
 testresultlabel = zeros(1,Ntest);
 
-%We also need to preprocessing the combined metric
-for k=1:NumG
-     eval(['L',num2str(k),'=L(:,(k-1)*D+1:D*k);']);
-end    
-
 %Find the nearest 1 neighbour in the training dataset of testing dataset,
 %and set the group information vector on this testing point
-testing_g = [];
-for i = 1:Ntest
-    tempdis = [];
-    for j = 1:Ntrain
-        tempdis(j) = (testing(:,i)-training(:,j))'*(testing(:,i)-training(:,j));
-    end
-    index = find(tempdis == min(tempdis));
-    testing_g(:,i) = g(:,index(1));
-end
+M = bsxfun(@plus, sum(testing .* testing, 1)', (-2) * testing' * training);        
+M = bsxfun(@plus, sum(training .* training, 1), M);
+M(M<0)=0;
+[Mdis,index] = min(M,[],2);
+testing_g = g(:,index);
+clear M index Mdis;
 
-for i = 1:Ntest
-    tempdis = zeros(1,Ntrain);
-    for j = 1:Ntrain
-        %Now i is the point in the test data and j is in the training set,
-        %let's see the distance between all the j and i
-        tempmetric = zeros(D,D);
-        for k = 1:NumG
-            eval(['L',num2str(k),' = L(:,(k-1)*D+1:D*k);']);
-            eval(['Ltemp = L',num2str(k),';']);
-            tempmetric = tempmetric+Ltemp'*Ltemp*g(k,j)*testing_g(k,i);
-        end
-        tempdis(j) = (testing(:,i)-training(:,j))'*tempmetric*(testing(:,i)-training(:,j));
-    end
-    tempsort = sort(tempdis);
-    IndexKnn = zeros(1,Kneigh);
-    templabel = zeros(1,Kneigh);
-    for p = 1:Kneigh
-        hehe = find(tempdis == tempsort(p));
-        IndexKnn(p) = hehe(1);
-        templabel(p) = trainlabel(IndexKnn(p));
-    end
-    temptestlabel = maxelement(templabel);
-    tempindex = randperm(length(temptestlabel));
-    testresultlabel(i) = temptestlabel(tempindex(1));
+tempmetric = zeros(D*Ntest,D*Ntrain);
+for k=1:NumG
+    eval(['L',num2str(k),'=L(:,(k-1)*D+1:D*k);']);
+    eval(['Ltemp=L',num2str(k),';']);
+    LL = Ltemp'*Ltemp;
+    tempg = repmat(testing_g(k,:),D,1);
+    tempg2 = repmat(g(k,:),D,1);
+    temp1 = bsxfun(@times,tempg(:),repmat(LL,Ntest,Ntrain));
+    tempmetric = tempmetric+bsxfun(@times,tempg2(:)',temp1);
 end
+clear tempg tempg2 temp1;
+for m=1:Ntest
+    for n=1:Ntrain
+        temp = tempmetric(D*(m-1)+1:D*m,D*(n-1)+1:D*n);
+        dist(m,n) = (testing(:,m)-training(:,n))'*temp*(testing(:,m)-training(:,n));
+    end
+end
+clear tempmetric;
+ 
+[Y,I] = sort(dist,2);
+clear Y;
+testresultlabel = mode(trainlabel(I(:,1:Kneigh)),2);
 
 %Let's find the classification errors based on the prediction
-hehe = testlabel-testresultlabel;
+hehe = testlabel-testresultlabel';
 result = 1-length(find(hehe~=0))/Ntest;

@@ -24,29 +24,24 @@ N = XN;
 Lyk = L;
 Lxk = L;
 Index = 1; %This index is used in controlling number of minimization steps
-
+G = repmat(g,N,1).*repmat(g',1,N);
 %Now we are trying to minimize the problem
 %The problem formation is like f(x)+h(x), in which f(x) is
 %differentiable and h(x) is non-differentiable
 while(1)
     %First of all, let's compute gradient of f(x)
-    Gra_f = zeros(LM,LN);
-    fk = 0;
-    for m = 1:N
-        for n = (m+1):N
-            Emn = (X(:,m)-X(:,n))'*Lyk'*Lyk*(X(:,m)-X(:,n));
-            fk = fk+S(m,n)*Emn*g(n)*g(m)+(1-S(m,n))*max(0,1-Emn);
-            Cmn = (X(:,m)-X(:,n))*(X(:,m)-X(:,n))';
-            if Emn <= 1
-                h_pri = 1;
-            else
-                h_pri = 0;
-            end
-            Gra_f = Gra_f+2*Lyk*(S(m,n)*Cmn*g(n)*g(m)-(1-S(m,n))*Cmn*h_pri);
-        end
-    end
-    fk = 2*fk; %Since the matrix is symmetric, we could use this to reduce the complexity
-    Gra_f = 2*Gra_f;
+   %Use bfxfun to accelerate the computation of the metric
+    XX = Lyk*X;
+    E = bsxfun(@plus, sum(XX.*XX,1)',(-2)*XX'*XX);
+    E = bsxfun(@plus, sum(XX.*XX,1),E);
+    fk = sum(sum(S.*E.*G+(1-S).*max(0,1-E)));
+    
+    X_Temp = repmat(X,1,N);
+    Coff = S.*G-(1-S).*sign(max(0,1-E));
+    temp_S = repmat(reshape(Coff',1,N*N),D,1);
+    Gra_f = 2*(temp_S.*X_Temp)*X_Temp'-2*(temp_S.*reshape(repmat(X,N,1),D,N*N))*repmat(X',N,1);
+    clear X_Temp Coff temp_S;
+    Gra_f = 2*Lyk*Gra_f;
     
     tk = t0;
     

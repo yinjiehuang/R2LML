@@ -1,18 +1,18 @@
 %This Demo shows how to run R2LML 
 clear;clc;
 %%Read the data
-path = [pwd,'\Data\ionosphere'];
+path = [pwd,'\Data\robot'];
 addpath([pwd,'\Functions']);
 
 %%We will set all the hyperparamters here
 %Number of metric
-parameters.NumMa_K = 7;
+parameters.NumMa_K = 5;
 %Regularization value lambda
 parameters.lambda = 1;
 %Step length of PSD
 parameters.t0 = 1e-5;
 %Number of steps of PSD for each metric
-parameters.iter = 200;
+parameters.iter = 800;
 %Number of epoches of two steps
 parameters.epoch = 5;
 %Number of k-nearest neighbors when testing

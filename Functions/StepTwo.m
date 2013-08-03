@@ -15,14 +15,10 @@ g = zeros(K*N,1);
 for k = 1:K
     eval(['L',num2str(k),' = L(:,(k-1)*D+1:D*k);']);
     eval(['Ltemp = L',num2str(k),';']);
-    Temp = zeros(N,N);
-    for m = 1:N
-        for n = (m+1):N
-            Emn = (X(:,m)-X(:,n))'*Ltemp'*Ltemp*(X(:,m)-X(:,n));
-            Temp(m,n) = S(m,n)*Emn;
-        end
-    end
-    Temp = Temp+Temp';
+    XX = Ltemp*X;
+    E = bsxfun(@plus, sum(XX.*XX,1)',(-2)*XX'*XX);
+    E = bsxfun(@plus, sum(XX.*XX,1),E);
+    Temp = S.*E;
     %Based on S_Ba, we need to get S_Til matrix
     S_Til((k-1)*N+1:k*N,(k-1)*N+1:k*N) = Temp;
     %Then let's vectorize the g
@@ -71,7 +67,7 @@ while(1)
     if mod(Index,10) ==0
         fprintf('Iter %5d. Difference of Majority: %15f. \t \n',Index,Difference);
     end
-    if Difference <= 1e-3 || Index >= 3000
+    if Difference <= 1e-3 || Index >= 500
         break;
     else
         gprime = gk;
